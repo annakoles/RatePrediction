@@ -3,19 +3,28 @@ package ru.liga;
 import java.util.Arrays;
 
 public class CommandInput {
-    enum Command {rate};
+    public enum Command {rate}
 
-    enum Currency {EUR, USD, TRY};
+    ;
 
-    enum Period {tomorrow, week};
+    public enum Currency {EUR, USD, TRY}
 
-    private final String commandLine;
-    private Command command;
-    private Currency currency;
-    private Period period;
+    ;
+
+    public enum Period {tomorrow, week}
+
+    ;
+    private final Command command;
+    private final Currency currency;
+    private final Period period;
 
     public CommandInput(String commandLine) {
-        this.commandLine = commandLine;
+        validate(commandLine);
+
+        String[] commandArgs = commandLine.split(" ");
+        this.command = Command.valueOf(commandArgs[0]);
+        this.currency = Currency.valueOf(commandArgs[1]);
+        this.period = Period.valueOf(commandArgs[2]);
     }
 
     public Currency getCurrency() {
@@ -26,21 +35,17 @@ public class CommandInput {
         return period;
     }
 
-    public void validate() throws ValidateException {
+    private void validate(String commandLine) throws ValidateException {
         String[] commandArgs = commandLine.split(" ");
         if (commandArgs.length != 3) {
-            throw new ValidateException();
+            throw new ValidateException("Некорректное количество аргументов");
         } else {
             if (!Arrays.asList(Command.values()).toString().contains(commandArgs[0])) {
-                throw new ValidateException();
+                throw new ValidateException("Некорректная команда: " + commandArgs[0]);
             } else if (!Arrays.asList(Currency.values()).toString().contains(commandArgs[1])) {
-                throw new ValidateException();
+                throw new ValidateException("Некорректно введен код валюты: " + commandArgs[1]);
             } else if (!Arrays.asList(Period.values()).toString().contains(commandArgs[2])) {
-                throw new ValidateException();
-            } else {
-                this.command = Command.valueOf(commandArgs[0]);
-                this.currency = Currency.valueOf(commandArgs[1]);
-                this.period = Period.valueOf(commandArgs[2]);
+                throw new ValidateException("Некорректно указан период прогнозирования: " + commandArgs[2]);
             }
         }
     }

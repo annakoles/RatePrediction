@@ -10,14 +10,12 @@ import static ru.liga.App.PREDICT_DAYS;
 
 public class Prediction {
     private List<Rate> rates;
-    private CommandInput.Period period;
 
-    public Prediction(List<Rate> rates, CommandInput.Period period) {
+    public Prediction(List<Rate> rates) {
         this.rates = rates;
-        this.period = period;
     }
 
-    public List<Rate> predict() {
+    public List<Rate> predict(CommandInput.Period period) {
         List<Rate> predictRates = new ArrayList<>();
 
         LocalDate today = LocalDate.now();
@@ -46,7 +44,7 @@ public class Prediction {
      * @param rates курсы валют за последние 7+ дней
      * @return среднее арифметическое значение на основании 7 последних курсов
      */
-    public static BigDecimal average(List<Rate> rates) {
+    private static BigDecimal average(List<Rate> rates) {
         BigDecimal sum = BigDecimal.ZERO;
         for (int i = 0; i < PREDICT_DAYS; i++) {
             sum = sum.add(rates.get(i).getRate().divide(new BigDecimal(rates.get(i).getNominal()), RoundingMode.CEILING));

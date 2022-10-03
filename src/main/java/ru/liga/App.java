@@ -15,21 +15,21 @@ public class App {
     public static void main(String[] args) throws Exception {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             CommandInput commandInput = new CommandInput(reader.readLine());
-            commandInput.validate();
 
             String fileName = "/" + commandInput.getCurrency() + ".csv";
-            try (BufferedReader csvReader = new BufferedReader(new InputStreamReader(App.class.getResourceAsStream(fileName)))) {
-                List<Rate> rates = RatesReading.read7rates(csvReader);
+            List<Rate> rates = RatesReading.read7rates(fileName);
 
-                Prediction prediction = new Prediction(rates, commandInput.getPeriod());
-                List<Rate> predictRates = prediction.predict();
+            Prediction prediction = new Prediction(rates);
+            List<Rate> predictRates = prediction.predict(commandInput.getPeriod());
+            printPrediction(predictRates);
+        } catch (ValidateException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
-                for (Rate rate : predictRates) {
-                    System.out.println(rate.toString());
-                }
-            }
-        }  catch(ValidateException e) {
-            System.out.println("Введена некорректная команда");
+    public static void printPrediction(List<Rate> rates) {
+        for (Rate rate : rates) {
+            System.out.println(rate.dateRateFormat());
         }
     }
 }

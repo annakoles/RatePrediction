@@ -27,8 +27,7 @@ public class Rate {
         return rate;
     }
 
-    @Override
-    public String toString() {
+    public String dateRateFormat() {
         return date.format(DateTimeFormatter.ofPattern("E dd.MM.yyyy")) + " - " + String.format("%.2f", rate);
     }
 }
