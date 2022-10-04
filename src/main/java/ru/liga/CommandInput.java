@@ -4,10 +4,9 @@ import java.util.Arrays;
 
 public class CommandInput {
     public enum Command {rate};
-
     public enum Currency {EUR, USD, TRY};
-
     public enum Period {tomorrow, week};
+
     private final Command command;
     private final Currency currency;
     private final Period period;
